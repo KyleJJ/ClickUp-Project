@@ -1,0 +1,6 @@
+<div class="table" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+  <div class="column" *ngFor="let column of data.columns" cdkDrag>
+    <div class="column-header">{{ column.header }}</div>
+    <div class="column-stat" *ngFor="let stat of column.stats">{{ stat }}</div>
+  </div>
+</div>
