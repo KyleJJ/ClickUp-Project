@@ -2,11 +2,14 @@
   <div class="filter year">2019-20</div>
   <div class="filter type">Per Game</div>
   
-  <!-- <div class="filter search"><input [(ngModel)]="data.search" (change)="search()" placeholder="Search"></div> -->
+  <div class="filter search">
+    <input [(ngModel)]="searchInput" placeholder='Search "player:lebron" or "ast:>5"'/>
+    <mat-icon (click)="searchTable()">search</mat-icon>
+  </div>
 </div>
 
 <div class="table" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
-  <div class="column" *ngFor="let column of data.columns; let i = index">
+  <div class="column" *ngFor="let column of data.columns | filterTable:searchInput; let i = index">
     <div [style.width]="column.width + 'px'" cdkDrag>
       <div class="header" (click)="sortColumn(i)">{{ column.header }}
         <mat-icon *ngIf="data.sortColumns.includes(i)">arrow_drop_down</mat-icon>

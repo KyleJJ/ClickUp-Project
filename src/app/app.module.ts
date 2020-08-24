@@ -12,13 +12,16 @@ import { DataReducer } from './store/data.reducer';
 import { DataEffects } from './store/data.effects';
 import { MatIconModule } from '@angular/material/icon';
 import { FormatPlayerPipe } from './components/flexible-table/format-player.pipe'
+import { FormsModule } from '@angular/forms';
+import { FilterTablePipe } from './components/flexible-table/filter-table.pipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     FlexibleTableComponent,
-    FormatPlayerPipe
+    FormatPlayerPipe,
+    FilterTablePipe
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,8 @@ import { FormatPlayerPipe } from './components/flexible-table/format-player.pipe
     StoreModule.forRoot({ data: DataReducer }),
     EffectsModule.forRoot([DataEffects]),
     DragDropModule,
-    MatIconModule
+    MatIconModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

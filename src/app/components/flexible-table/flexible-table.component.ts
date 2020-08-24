@@ -15,6 +15,8 @@ export class FlexibleTableComponent implements OnInit {
 
   startX = 0;
 
+  searchInput: string = '';
+
   constructor(private store: Store<Data>) { }
 
   ngOnInit(): void {
@@ -38,5 +40,12 @@ export class FlexibleTableComponent implements OnInit {
     let pixels = event.offsetX - this.startX;
     this.store.dispatch(new ResizeColumn(i, pixels));
   }
+
+  // Filter columns for search term 
+  searchTable() {
+    this.searchInput.toLowerCase().split(':');
+    console.log(this.searchInput);
+
+  } 
 
 }
