@@ -21,13 +21,32 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
     
     // Move column from oldIndex to newIndex
     case ActionTypes.MoveColumn:
+      // If column landing spot is sorted shift accordingly
+      let newSortIndex = state.sortColumns.indexOf(action.newIndex);
+      if (newSortIndex !== -1) {
+        newState.sortColumns[newSortIndex] += action.oldIndex > action.newIndex ? 1 : -1;
+      }
+      // If moving column is sorted update sorted indices array
+      let oldSortIndex = state.sortColumns.indexOf(action.oldIndex);
+      if (oldSortIndex !== -1) {
+        newState.sortColumns[oldSortIndex] = action.newIndex;
+      }
       let temp = columns[action.oldIndex];
       if (action.oldIndex > action.newIndex) { // shift columns right
         for (let i = action.oldIndex; i > action.newIndex; i--) {
+          // Update sorted indices
+          let iSortIndex = state.sortColumns.indexOf(i);
+          if (iSortIndex !== -1 && i !== action.oldIndex) {
+            newState.sortColumns[iSortIndex] -= 1;
+          }
           newState.columns[i] = columns[i - 1];
         }
       } else { // shift columns left
         for (let i = action.oldIndex; i < action.newIndex; i++) {
+          let iSortIndex = state.sortColumns.indexOf(i);
+          if (iSortIndex !== -1 && i !== action.oldIndex) {
+            newState.sortColumns[iSortIndex] += 1;
+          }
           newState.columns[i] = columns[i + 1];
         }
       }
@@ -68,6 +87,11 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
       // Save in local storage
       localStorage.setItem('state', JSON.stringify(newState));
       // Return new state
+      return newState;
+
+
+    case ActionTypes.ResizeColumn:
+      newState.columns[action.columnIndex].width += action.pixels;
       return newState;
 
     // Load data

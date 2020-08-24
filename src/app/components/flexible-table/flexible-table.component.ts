@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Data, Column } from '../../interfaces/data.interface';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Store } from '@ngrx/store';
-import { MoveColumn, SortColumn } from 'src/app/store/data.actions';
+import { MoveColumn, SortColumn, ResizeColumn } from 'src/app/store/data.actions';
 
 @Component({
   selector: 'flexible-table',
@@ -12,6 +12,8 @@ import { MoveColumn, SortColumn } from 'src/app/store/data.actions';
 export class FlexibleTableComponent implements OnInit {
 
   @Input() data: Data;
+
+  startX = 0;
 
   constructor(private store: Store<Data>) { }
 
@@ -29,10 +31,12 @@ export class FlexibleTableComponent implements OnInit {
   }
 
   // Resize column
-  resize(event, i) {
-    console.log('resize', event);
-    // this.store.dispatch(new ResizeColumn(columnIndex));
-
+  resizeStart(event) {
+    this.startX = event.offsetX;
+  }
+  resizeEnd(event, i) {
+    let pixels = event.offsetX - this.startX;
+    this.store.dispatch(new ResizeColumn(i, pixels));
   }
 
 }

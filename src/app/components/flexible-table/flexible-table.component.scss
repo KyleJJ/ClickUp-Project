@@ -29,20 +29,20 @@
   justify-content: flex-start;
   align-items: stretch;
   overflow: scroll;
+  padding: 8px;
 }
 
 .column {
   position: relative;
   display: flex;
   flex-direction: row;
-  .resize {
-    width: 8px;
-    height: 100%;
-    // background: red;
 
-    .resize-icon {
-      display: none;
-    }
+  .resize {
+    width: 16px;
+    height: 100%;
+    cursor: ew-resize;
+
+    // background: red;
     // display: none;
     // position: absolute;
     // top: 0;
@@ -56,14 +56,16 @@
     // }
   }
 }
-
-.column:hover {
-  .resize:hover {
-    display: block;
-  }
-}
+// .column {
+//   .resize:hover {
+//     .resize-button {
+//       display: block;
+//     }
+//   }
+// }
 .cdk-drag:hover {
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  // border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 .cdk-drag {
   display: flex;
@@ -74,7 +76,7 @@
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 8px;
-  // transition: transform 250ms ease-in-out;
+  transition: box-shadow 250ms ease-in-out;
   .header {
     display: flex;
     justify-content: center;
@@ -117,7 +119,7 @@
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .cdk-drag-placeholder {

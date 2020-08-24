@@ -5,7 +5,8 @@ export enum ActionTypes {
   LoadData = '[Data] Load data',
   ShowData = '[Data] Load success',
   MoveColumn = '[Data] Move column',
-  SortColumn = '[Data] Sort column'
+  SortColumn = '[Data] Sort column',
+  ResizeColumn = '[Data] Resize column'
 }
 
 export class LoadData implements Action {
@@ -30,6 +31,12 @@ export class SortColumn implements Action {
   constructor(public columnIndex: number) {}
 }
 
+export class ResizeColumn implements Action {
+  readonly type = ActionTypes.ResizeColumn;
+
+  constructor(public columnIndex: number, public pixels: number) {}
+}
 
 
-export type ActionsUnion = LoadData | ShowData | MoveColumn | SortColumn;
+
+export type ActionsUnion = LoadData | ShowData | MoveColumn | SortColumn | ResizeColumn;
