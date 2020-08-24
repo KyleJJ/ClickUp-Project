@@ -13,7 +13,6 @@ import { DataEffects } from './store/data.effects';
 import { MatIconModule } from '@angular/material/icon';
 import { FormatPlayerPipe } from './components/flexible-table/format-player.pipe'
 import { FormsModule } from '@angular/forms';
-import { FilterTablePipe } from './components/flexible-table/filter-table.pipe';
 
 
 @NgModule({
@@ -21,7 +20,6 @@ import { FilterTablePipe } from './components/flexible-table/filter-table.pipe';
     AppComponent,
     FlexibleTableComponent,
     FormatPlayerPipe,
-    FilterTablePipe
   ],
   imports: [
     BrowserModule,
