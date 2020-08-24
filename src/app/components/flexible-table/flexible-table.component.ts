@@ -18,12 +18,21 @@ export class FlexibleTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  // Update state when user reorders column
+  dropColumn(event: CdkDragDrop<string[]>) {
     this.store.dispatch(new MoveColumn(event.previousIndex, event.currentIndex));
   }
 
-  sort(columnIndex: number) {
+  // Update state when user sorts column
+  sortColumn(columnIndex: number) {
     this.store.dispatch(new SortColumn(columnIndex));
+  }
+
+  // Resize column
+  resize(event, i) {
+    console.log('resize', event);
+    // this.store.dispatch(new ResizeColumn(columnIndex));
+
   }
 
 }

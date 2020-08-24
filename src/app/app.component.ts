@@ -11,7 +11,11 @@ import { LoadData, ShowData } from './store/data.actions';
 })
 export class AppComponent {
   
-  data: Data = { columns: [] };
+  data: Data = { 
+    columns: [],
+    sortColumns: [],
+    search: ''
+  };
 
   constructor(private store: Store<{ data: Data }>) {
     this.store.pipe(select('data')).subscribe(data => {
@@ -23,7 +27,7 @@ export class AppComponent {
   ngOnInit() {
     let storedState = localStorage.getItem('state');
     if (storedState) {
-      this.store.dispatch(new ShowData(JSON.parse(storedState).columns));
+      this.store.dispatch(new ShowData(JSON.parse(storedState)));
     } else {
       this.store.dispatch(new LoadData());
     }

@@ -10,19 +10,23 @@ import { FlexibleTableComponent } from './components/flexible-table/flexible-tab
 
 import { DataReducer } from './store/data.reducer';
 import { DataEffects } from './store/data.effects';
+import { MatIconModule } from '@angular/material/icon';
+import { FormatPlayerPipe } from './components/flexible-table/format-player.pipe'
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    FlexibleTableComponent
+    FlexibleTableComponent,
+    FormatPlayerPipe
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     StoreModule.forRoot({ data: DataReducer }),
     EffectsModule.forRoot([DataEffects]),
-    DragDropModule
+    DragDropModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

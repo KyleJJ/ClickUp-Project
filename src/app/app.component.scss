@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 8px;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(0,0,0,.2);
+  .clickup {
+    height: 48px;
+  }
+  mat-icon {
+    color: rgba(0,0,0,.5);
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    margin: 0 4px;
+  }
+  .kyle {
+    font-size: 24px;
+    font-weight: 900;
+    padding: 8px;
+  }
+}
+
+.content {
+  padding: 16px;
+}

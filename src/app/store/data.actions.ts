@@ -2,10 +2,10 @@ import { Action } from '@ngrx/store';
 import { Data, Column } from '../interfaces/data.interface';
 
 export enum ActionTypes {
-  LoadData = '[Columns] Load data',
-  ShowData = '[Columns] Load success',
-  MoveColumn = '[Columns] Move column',
-  SortColumn = '[Columns] Sort column'
+  LoadData = '[Data] Load data',
+  ShowData = '[Data] Load success',
+  MoveColumn = '[Data] Move column',
+  SortColumn = '[Data] Sort column'
 }
 
 export class LoadData implements Action {
@@ -15,7 +15,7 @@ export class LoadData implements Action {
 export class ShowData implements Action {
   readonly type = ActionTypes.ShowData;
 
-  constructor(public payload: Column[]) {}
+  constructor(public payload: Data) {}
 }
 
 export class MoveColumn implements Action {

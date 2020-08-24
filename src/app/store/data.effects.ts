@@ -18,7 +18,13 @@ export class DataEffects {
     switchMap(() =>
       this.dataService.getData().pipe(
         map(data => {
-          return { type: ActionTypes.ShowData, payload: data };
+          return { 
+            type: ActionTypes.ShowData, 
+            payload: { 
+              columns: data,
+              sortColumns: []
+            } 
+          };
         }),
         catchError(() => EMPTY)
       )
