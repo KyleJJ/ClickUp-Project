@@ -1,24 +1,47 @@
+<!-- Table filters -->
 <div class="filters">
-  <div class="filter year">2019-20</div>
-  <div class="filter type">Per Game</div>
+  <div class="row">
+    <div class="filter year">2019-20</div>
+    <div class="filter type">Per Game</div>
+  </div>
   
   <div class="filter search">
     <input [(ngModel)]="searchInput" placeholder='Search "player:lebron" or "ast:>5"'/>
     <mat-icon (click)="searchTable()">search</mat-icon>
   </div>
+
+  <!-- <mat-paginator [length]="columns[0].stats.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[10, 25, 50]"
+  (page)="pageEvent = handlePage($event)">
+  </mat-paginator> -->
+  <div class="row">
+    <div class="filter" (click)="changePage(-1)"><mat-icon>chevron_left</mat-icon></div>
+    <div>{{pageIndex + 1}} / {{ totalPages }}</div>
+    <div class="filter" (click)="changePage(1)"><mat-icon>chevron_right</mat-icon></div>
+  </div>
+
 </div>
 
-<div class="table" *ngIf="columns.length > 0" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
+<!-- Table -->
+<div class="table" *ngIf="columns.length > 0" 
+  cdkDropList 
+  cdkDropListOrientation="horizontal" 
+  (cdkDropListDropped)="dropColumn($event)">
+
   <div class="column" *ngFor="let column of columns; let i = index">
     <div [style.width]="column.width + 'px'" cdkDrag>
       <div class="header" (click)="sortColumn(i)">{{ column.header }}
         <mat-icon *ngIf="sortColumns.includes(i)">arrow_drop_down</mat-icon>
       </div>
-      <div class="stat" *ngFor="let stat of column.stats">
+      <div class="stat" *ngFor="let stat of column.stats | slice:pageStart:pageEnd">
         <span *ngIf="i === 0" class="player">{{ stat | formatPlayer}}</span>
         <span *ngIf="i !== 0" class="player-stat">{{ stat }}</span>
       </div>
     </div>
-    <div class="resize" draggable="true" (dragstart)="resizeStart($event)" (dragend)="resizeEnd($event, i)"></div> 
+    <div class="resize" draggable="true" 
+      (dragstart)="resizeStart($event)" 
+      (dragend)="resizeEnd($event, i)">
+    </div> 
   </div>
 </div>

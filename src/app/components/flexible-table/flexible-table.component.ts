@@ -16,19 +16,42 @@ export class FlexibleTableComponent implements OnInit {
 
   public columns: Column[] = [];
   public sortColumns: number[] = [];
-  public startX = 0;
+
+  // Search input text
   public searchInput: string = '';
+
+  // Pagination variables
+  public pageStart: number = 0; // Start index for stats
+  public pageEnd: number = 25; // End index for stats
+  public pageSize = 25; // Number of stats per page
+  public pageIndex = 0; // Index of current page
+  public totalPages;
+
+  // Start position of cursor used to resize column
+  public startX = 0;
+
 
   constructor(private store: Store<Data>) { }
 
   ngOnInit(): void {
-    // this.columns = this.columns;
+    this.totalPages = Math.floor(this.columns[0].stats.length / this.pageSize) + 1;
   }
 
   ngOnChanges(changes) {
-    console.log('changes', changes);
     this.columns = changes.data.currentValue.columns;
     this.sortColumns = changes.data.currentValue.sortColumns;
+  }
+
+  changePage(direction: number) {
+    if (this.pageIndex === 0 && direction === -1) {
+      return;
+    }
+    if (this.pageIndex === this.totalPages - 1 && direction === 1) {
+      return;
+    }
+    this.pageIndex += direction;
+    this.pageStart = this.pageIndex * this.pageSize;
+    this.pageEnd = (this.pageIndex + 1) * this.pageSize;
   }
 
   // Update state when user reorders column
@@ -50,6 +73,7 @@ export class FlexibleTableComponent implements OnInit {
     this.store.dispatch(new ResizeColumn(i, pixels));
   }
 
+  
   // Filter columns for search term
   searchTable() {
     // Check for invalid search input
@@ -59,19 +83,19 @@ export class FlexibleTableComponent implements OnInit {
     } else if (splitInput[1].length < 2) {
       this.columns = this.data.columns;
     }
-    let header = splitInput[0];
+    let header = splitInput[0].replace('%', '_');
     let condition = splitInput[1];
     // Get stats for column matching input header
-    let stats = this.data.columns.find(column => column.header.toLowerCase() === header).stats;
+    let stats = this.data.columns.find(column => column.header.toLowerCase().replace('%', '_') === header).stats;
     // Initialize of array of indices to filter
     let indices = stats.map((v, i, a) => i);
-    // Filter indices if stats satisfy input condition
+    // Filter indices with stats that satisfy input condition
     if (condition.charAt(0) === '<') {
       indices = indices.filter(a => parseFloat(stats[a]) < parseFloat(condition.substr(1)));
     } else if (condition.charAt(0) === '>') {
       indices = indices.filter(a => parseFloat(stats[a]) > parseFloat(condition.substr(1)));
     } else {
-      indices = indices.filter(a => ('' + stats[a]).toLowerCase().search(condition) > 0);
+      indices = indices.filter(a => (' ' + stats[a]).toLowerCase().search(condition) > 0);
     }
     // Filter all columns with filtered indices
     let newColumns = JSON.parse(JSON.stringify(this.data.columns));
@@ -85,6 +109,7 @@ export class FlexibleTableComponent implements OnInit {
     }
     // Update columns
     this.columns = newColumns;
+    this.totalPages = Math.floor(indices.length / this.pageSize) + 1;
   } 
 
 }

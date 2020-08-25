@@ -16,6 +16,7 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
     
     // Move column from oldIndex to newIndex
     case ActionTypes.MoveColumn:
+      console.log('inital sort: ', state.sortColumns, action.oldIndex + '>' + action.newIndex);
       // Copy state
       let stateMove: Data = JSON.parse(JSON.stringify(state));
       // If column landing spot is sorted shift accordingly
@@ -23,7 +24,7 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
       if (newSortIndex !== -1) {
         stateMove.sortColumns[newSortIndex] += action.oldIndex > action.newIndex ? 1 : -1;
       }
-      // If moving column is sorted update sorted indices array
+      // If column old spot is sorted update sorted indices array
       let oldSortIndex = state.sortColumns.indexOf(action.oldIndex);
       if (oldSortIndex !== -1) {
         stateMove.sortColumns[oldSortIndex] = action.newIndex;
@@ -35,7 +36,7 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
           // Update sorted indices
           let iSortIndex = state.sortColumns.indexOf(i);
           if (iSortIndex !== -1 && i !== action.oldIndex) {
-            stateMove.sortColumns[iSortIndex] -= 1;
+            stateMove.sortColumns[iSortIndex] += 1;
           }
           stateMove.columns[i] = state.columns[i - 1];
         }
@@ -43,7 +44,7 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
         for (let i = action.oldIndex; i < action.newIndex; i++) {
           let iSortIndex = state.sortColumns.indexOf(i);
           if (iSortIndex !== -1 && i !== action.oldIndex) {
-            stateMove.sortColumns[iSortIndex] += 1;
+            stateMove.sortColumns[iSortIndex] -= 1;
           }
           stateMove.columns[i] = state.columns[i + 1];
         }
@@ -53,6 +54,8 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
       // Save in local storage
       localStorage.setItem('state', JSON.stringify(stateMove));
       // Return new state
+      console.log('after sort: ', stateMove.sortColumns);
+
       return stateMove;
 
     // Sort column
@@ -71,7 +74,7 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
       while (sortIndex < stateSort.sortColumns.length) {
         let stats = state.columns[stateSort.sortColumns[sortIndex]].stats;
         // Create and sort array of indices
-        let sortIndices = state.columns.map((v, i, a) => i);
+        let sortIndices = stats.map((v, i, a) => i);
         sortIndices.sort((a, b) => stats[a] < stats[b] ? 1 : stats[a] > stats[b] ? -1 : 0);
         // Update all columns with sorted indices
         for (let i = 0; i < state.columns.length; i++) {
@@ -95,14 +98,6 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
 
     // Load data
     default:
-      console.log('load data', state);
       return state;
-      // console.log('loading data');
-      // let storedState = localStorage.getItem('state');
-      // if (storedState) {
-      //   return JSON.parse(storedState);
-      // } else {
-      //   return state;
-      // }
   }
 }

@@ -1,7 +1,7 @@
 export interface Data {
   columns: Column[];
   sortColumns: number[];
-  search: string;
+  pageIndex: number;
 }
 
 export interface Column {
