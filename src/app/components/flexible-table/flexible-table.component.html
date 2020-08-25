@@ -8,12 +8,11 @@
   </div>
 </div>
 
-<div class="table" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
-  <!-- <div class="column" *ngFor="let column of data.columns | filterTable:searchInput; let i = index"> -->
+<div class="table" *ngIf="columns.length > 0" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
   <div class="column" *ngFor="let column of columns; let i = index">
     <div [style.width]="column.width + 'px'" cdkDrag>
       <div class="header" (click)="sortColumn(i)">{{ column.header }}
-        <mat-icon *ngIf="data.sortColumns.includes(i)">arrow_drop_down</mat-icon>
+        <mat-icon *ngIf="sortColumns.includes(i)">arrow_drop_down</mat-icon>
       </div>
       <div class="stat" *ngFor="let stat of column.stats">
         <span *ngIf="i === 0" class="player">{{ stat | formatPlayer}}</span>

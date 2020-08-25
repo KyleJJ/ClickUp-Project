@@ -7,7 +7,9 @@
 
 <div class="content" role="main">
 
-  <!-- <flexible-table [data]="data | async"></flexible-table> -->
-  <flexible-table [data]="data"></flexible-table>
+  <div *ngIf="data$ | async as data">
+    <flexible-table [data]="data"></flexible-table>
+  </div>
+  <!-- <flexible-table [data]="data"></flexible-table> -->
 
 </div>

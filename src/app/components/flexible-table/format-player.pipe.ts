@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FormatPlayerPipe implements PipeTransform {
 
   transform(player: string): string {
-    return player.split('\\')[0];
+    return player ? player.split('\\')[0] : '';
   }
 
 }

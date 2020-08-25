@@ -8,11 +8,6 @@ export const initialState = {
 
 export function DataReducer(state = initialState, action: ActionsUnion) {
 
-  // Copy state
-  let newState: Data = JSON.parse(JSON.stringify(state));
-  let columns: Column[] = JSON.parse(JSON.stringify(state.columns));
-  let sortColumns: number[] = JSON.parse(JSON.stringify(state.sortColumns));
-
   switch (action.type) {
 
     // Show data after it's been loaded
@@ -21,86 +16,93 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
     
     // Move column from oldIndex to newIndex
     case ActionTypes.MoveColumn:
+      // Copy state
+      let stateMove: Data = JSON.parse(JSON.stringify(state));
       // If column landing spot is sorted shift accordingly
       let newSortIndex = state.sortColumns.indexOf(action.newIndex);
       if (newSortIndex !== -1) {
-        newState.sortColumns[newSortIndex] += action.oldIndex > action.newIndex ? 1 : -1;
+        stateMove.sortColumns[newSortIndex] += action.oldIndex > action.newIndex ? 1 : -1;
       }
       // If moving column is sorted update sorted indices array
       let oldSortIndex = state.sortColumns.indexOf(action.oldIndex);
       if (oldSortIndex !== -1) {
-        newState.sortColumns[oldSortIndex] = action.newIndex;
+        stateMove.sortColumns[oldSortIndex] = action.newIndex;
       }
-      let temp = columns[action.oldIndex];
+      // Reorder columns by shifting then placing moved column
+      let temp = state.columns[action.oldIndex];
       if (action.oldIndex > action.newIndex) { // shift columns right
         for (let i = action.oldIndex; i > action.newIndex; i--) {
           // Update sorted indices
           let iSortIndex = state.sortColumns.indexOf(i);
           if (iSortIndex !== -1 && i !== action.oldIndex) {
-            newState.sortColumns[iSortIndex] -= 1;
+            stateMove.sortColumns[iSortIndex] -= 1;
           }
-          newState.columns[i] = columns[i - 1];
+          stateMove.columns[i] = state.columns[i - 1];
         }
       } else { // shift columns left
         for (let i = action.oldIndex; i < action.newIndex; i++) {
           let iSortIndex = state.sortColumns.indexOf(i);
           if (iSortIndex !== -1 && i !== action.oldIndex) {
-            newState.sortColumns[iSortIndex] += 1;
+            stateMove.sortColumns[iSortIndex] += 1;
           }
-          newState.columns[i] = columns[i + 1];
+          stateMove.columns[i] = state.columns[i + 1];
         }
       }
       // Place column in new position
-      newState.columns[action.newIndex] = temp;
+      stateMove.columns[action.newIndex] = temp;
       // Save in local storage
-      localStorage.setItem('state', JSON.stringify(newState));
+      localStorage.setItem('state', JSON.stringify(stateMove));
       // Return new state
-      return newState;
+      return stateMove;
 
     // Sort column
     case ActionTypes.SortColumn:
-      console.log('sort column ' + action.columnIndex);
+      // Copy state
+      let stateSort: Data = JSON.parse(JSON.stringify(state));
       // Remove new column if already being sorted
-      if (sortColumns.includes(action.columnIndex)) {
-        newState.sortColumns.splice(sortColumns.indexOf(action.columnIndex), 1)
+      let colSortIndex = state.sortColumns.indexOf(action.columnIndex)
+      if (colSortIndex !== -1) {
+        stateSort.sortColumns.splice(colSortIndex, 1)
       } else { // Otherwise add the new column with least priority
-        newState.sortColumns.push(action.columnIndex);
+        stateSort.sortColumns.push(action.columnIndex);
       }
       // Sort for each selected column
       let sortIndex = 0;
-      while (sortIndex < newState.sortColumns.length) {
-        let stats = columns[newState.sortColumns[sortIndex]].stats;
+      while (sortIndex < stateSort.sortColumns.length) {
+        let stats = state.columns[stateSort.sortColumns[sortIndex]].stats;
         // Create and sort array of indices
-        let indices = new Array(stats.length)
-        for (let i = 0; i < indices.length; i++) {
-          indices[i] = i;
-        }
-        indices.sort((a, b) => stats[a] < stats[b] ? 1 : stats[a] > stats[b] ? -1 : 0);
+        let sortIndices = state.columns.map((v, i, a) => i);
+        sortIndices.sort((a, b) => stats[a] < stats[b] ? 1 : stats[a] > stats[b] ? -1 : 0);
         // Update all columns with sorted indices
-        for (let i = 0; i < columns.length; i++) {
+        for (let i = 0; i < state.columns.length; i++) {
           for (let j = 0; j < stats.length; j++) {
-            newState.columns[i].stats[j] = state.columns[i].stats[indices[j]];
+            stateSort.columns[i].stats[j] = state.columns[i].stats[sortIndices[j]];
           }
         }
         sortIndex++;
       }
       // Save in local storage
-      localStorage.setItem('state', JSON.stringify(newState));
+      localStorage.setItem('state', JSON.stringify(stateSort));
       // Return new state
-      return newState;
+      return stateSort;
 
 
     case ActionTypes.ResizeColumn:
-      newState.columns[action.columnIndex].width += action.pixels;
-      return newState;
+      // Copy state
+      let stateResize: Data = JSON.parse(JSON.stringify(state));
+      stateResize.columns[action.columnIndex].width += action.pixels;
+      return stateResize;
 
     // Load data
     default:
-      let storedState = localStorage.getItem('state');
-      if (storedState) {
-        return JSON.parse(storedState);
-      } else {
-        return state;
-      }
+      console.log('load data', state);
+      return state;
+      // console.log('loading data');
+      // let storedState = localStorage.getItem('state');
+      // if (storedState) {
+      //   return JSON.parse(storedState);
+      // } else {
+      //   return state;
+      // }
   }
 }
