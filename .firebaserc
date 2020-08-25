@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "clickup-mini-c0689": {
+      "hosting": {
+        "ClickUp-Project": [
+          "clickup-mini-c0689"
+        ]
+      }
+    }
+  }
+}

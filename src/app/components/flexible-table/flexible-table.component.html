@@ -10,14 +10,9 @@
     <mat-icon (click)="searchTable()">search</mat-icon>
   </div>
 
-  <!-- <mat-paginator [length]="columns[0].stats.length"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[10, 25, 50]"
-  (page)="pageEvent = handlePage($event)">
-  </mat-paginator> -->
   <div class="row">
     <div class="filter" (click)="changePage(-1)"><mat-icon>chevron_left</mat-icon></div>
-    <div>{{pageIndex + 1}} / {{ totalPages }}</div>
+    <div>{{ pageIndex + 1 }} / {{ totalPages }}</div>
     <div class="filter" (click)="changePage(1)"><mat-icon>chevron_right</mat-icon></div>
   </div>
 

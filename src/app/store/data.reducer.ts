@@ -16,7 +16,6 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
     
     // Move column from oldIndex to newIndex
     case ActionTypes.MoveColumn:
-      console.log('inital sort: ', state.sortColumns, action.oldIndex + '>' + action.newIndex);
       // Copy state
       let stateMove: Data = JSON.parse(JSON.stringify(state));
       // If column landing spot is sorted shift accordingly
@@ -54,8 +53,6 @@ export function DataReducer(state = initialState, action: ActionsUnion) {
       // Save in local storage
       localStorage.setItem('state', JSON.stringify(stateMove));
       // Return new state
-      console.log('after sort: ', stateMove.sortColumns);
-
       return stateMove;
 
     // Sort column

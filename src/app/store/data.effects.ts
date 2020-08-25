@@ -18,7 +18,6 @@ export class DataEffects {
     mergeMap(() =>
       this.dataService.getData().pipe(
         map(data => {
-          console.log('loaded data', data);
           return { 
             type: ActionTypes.ShowData, 
             payload: { 

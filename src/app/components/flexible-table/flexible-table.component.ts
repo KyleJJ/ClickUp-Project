@@ -21,8 +21,8 @@ export class FlexibleTableComponent implements OnInit {
   public searchInput: string = '';
 
   // Pagination variables
-  public pageStart: number = 0; // Start index for stats
-  public pageEnd: number = 25; // End index for stats
+  public pageStart = 0; // Start index for stats
+  public pageEnd = 25; // End index for stats
   public pageSize = 25; // Number of stats per page
   public pageIndex = 0; // Index of current page
   public totalPages;
@@ -30,25 +30,29 @@ export class FlexibleTableComponent implements OnInit {
   // Start position of cursor used to resize column
   public startX = 0;
 
-
   constructor(private store: Store<Data>) { }
 
   ngOnInit(): void {
-    this.totalPages = Math.floor(this.columns[0].stats.length / this.pageSize) + 1;
   }
 
   ngOnChanges(changes) {
     this.columns = changes.data.currentValue.columns;
     this.sortColumns = changes.data.currentValue.sortColumns;
+    this.totalPages = Math.floor(this.data.columns[0].stats.length / this.pageSize) + 1;
+
   }
 
+  // Change displayed page
   changePage(direction: number) {
+    // Break if first page
     if (this.pageIndex === 0 && direction === -1) {
       return;
     }
+    // Break if last page
     if (this.pageIndex === this.totalPages - 1 && direction === 1) {
       return;
     }
+    // Update page indices
     this.pageIndex += direction;
     this.pageStart = this.pageIndex * this.pageSize;
     this.pageEnd = (this.pageIndex + 1) * this.pageSize;
@@ -80,8 +84,10 @@ export class FlexibleTableComponent implements OnInit {
     let splitInput = this.searchInput.toLowerCase().split(':');
     if (splitInput.length < 2) {
       this.columns = this.data.columns;
+      return;
     } else if (splitInput[1].length < 2) {
       this.columns = this.data.columns;
+      return;
     }
     let header = splitInput[0].replace('%', '_');
     let condition = splitInput[1];
